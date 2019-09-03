@@ -1,9 +1,9 @@
 package com.train.mp.service.impl;
 
-import com.train.mp.entity.User;
-import com.train.mp.dao.UserMapper;
-import com.train.mp.service.IUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.train.mp.dao.UserMapper;
+import com.train.mp.entity.User;
+import com.train.mp.service.IUserService;
 import org.springframework.stereotype.Service;
 
 /**
@@ -16,5 +16,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
+
+
 
 }

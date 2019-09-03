@@ -1,7 +1,7 @@
 package com.train.mp.service;
 
-import com.train.mp.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.train.mp.entity.User;
 
 /**
  * <p>

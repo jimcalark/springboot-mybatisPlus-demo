@@ -20,7 +20,7 @@ import javax.validation.constraints.Pattern;
 @Data
 public class UserVo {
 
-    public  Long userId;
+    public  Long id;
 
     @NotBlank(message = "姓名不能为空")
     @Pattern(regexp = "^[\\u4E00-\\u9FA5A-Za-z]{2,15}$", message = "姓名为2至15位中文或英文")//pattern 在值为null的时候不会进行校验
