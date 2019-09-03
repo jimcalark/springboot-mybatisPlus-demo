@@ -1,5 +1,6 @@
-package com.train.mp.util;
+package com.train.mp.support;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.baomidou.mybatisplus.generator.AutoGenerator;
 import com.baomidou.mybatisplus.generator.InjectionConfig;
@@ -9,9 +10,11 @@ import com.baomidou.mybatisplus.generator.config.GlobalConfig;
 import com.baomidou.mybatisplus.generator.config.PackageConfig;
 import com.baomidou.mybatisplus.generator.config.StrategyConfig;
 import com.baomidou.mybatisplus.generator.config.TemplateConfig;
+import com.baomidou.mybatisplus.generator.config.po.TableFill;
 import com.baomidou.mybatisplus.generator.config.po.TableInfo;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +55,8 @@ public class CodeGenerator {
 
 
     public static void main(String[] args) {
-        String tableName = "mp_comment";//表名 格式 aa_bbb
+        //String tableName = "mp_comment";//表名 格式 aa_bbb
+        String[] tableNames = {"mp_user", "mp_article", "mp_comment", "mp_replay", "mp_module"};
         AutoGenerator mpg = new AutoGenerator(); // 代码生成器类
 
         // 设置全局配置
@@ -61,7 +65,8 @@ public class CodeGenerator {
         gc.setOutputDir(projectPath + "/src/main/java");
         gc.setAuthor(AUTHOR);
         gc.setOpen(false);
-        // gc.setSwagger2(true); 实体属性 Swagger2 注解
+        gc.setBaseResultMap(true);// XML ResultMap
+        gc.setActiveRecord(true);//开启AR模式 默认false
         mpg.setGlobalConfig(gc);
 
         // 数据源配置
@@ -77,6 +82,8 @@ public class CodeGenerator {
         PackageConfig pc = new PackageConfig();
 //        pc.setModuleName(scanner("模块名"));//maven多模块项目使用
         pc.setParent(BASE_PACKAGE);
+        pc.setMapper("dao");
+        pc.setXml("mapper");
         mpg.setPackageInfo(pc);
 
         // 自定义配置
@@ -95,8 +102,7 @@ public class CodeGenerator {
             @Override
             public String outputFile(TableInfo tableInfo) {
                 // 自定义输出文件名 ， 如果你 Entity 设置了前后缀、此处注意 xml 的名称会跟着发生变化！！
-                return projectPath + "/src/main/resources/mapper/" + pc.getModuleName()
-                        + "/" + tableInfo.getEntityName() + "Mapper" + StringPool.DOT_XML;
+                return projectPath + "/src/main/resources/mapper/" + tableInfo.getEntityName() + "Mapper" + StringPool.DOT_XML;//+ pc.getModuleName() + "/"
             }
         });
         /*
@@ -120,7 +126,6 @@ public class CodeGenerator {
         // templateConfig.setEntity("templates/entity2.java");
         // templateConfig.setService();
         // templateConfig.setController();
-
         templateConfig.setXml(null);
         mpg.setTemplate(templateConfig);
 
@@ -128,17 +133,28 @@ public class CodeGenerator {
         StrategyConfig strategy = new StrategyConfig();
         strategy.setNaming(NamingStrategy.underline_to_camel);
         strategy.setColumnNaming(NamingStrategy.underline_to_camel);
-//        strategy.setSuperEntityClass("com.baomidou.ant.common.BaseEntity");
-        strategy.setEntityLombokModel(true);
+        strategy.setEntityLombokModel(true);//lombok
         strategy.setRestControllerStyle(true);
-        // 公共父类
-//        strategy.setSuperControllerClass("com.baomidou.ant.common.BaseController");
-        // 写于父类中的公共字段
-//        strategy.setSuperEntityColumns("id");
+
+//      strategy.setSuperEntityClass("com.baomidou.ant.common.BaseEntity");
+        strategy.setSuperControllerClass("com.train.mp.controller.BaseController");// 公共父类
+//      strategy.setSuperEntityColumns("id");// 写于父类中的公共字段
+//      strategy.setTablePrefix(pc.getModuleName() + "_");
+
         strategy.setTablePrefix(TABLE_PREFIX);//生成的实体中不包含表的前缀
-        strategy.setInclude(tableName);
+        strategy.setInclude(tableNames);
         strategy.setControllerMappingHyphenStyle(true);
-//        strategy.setTablePrefix(pc.getModuleName() + "_");
+
+        strategy.setLogicDeleteFieldName("enable");
+
+//字段填充
+        List<TableFill> tableFillList = new ArrayList<>();
+        tableFillList.add(new TableFill("creator_id", FieldFill.INSERT));
+        tableFillList.add(new TableFill("create_time", FieldFill.INSERT));
+        tableFillList.add(new TableFill("modifier_id", FieldFill.UPDATE));
+        tableFillList.add(new TableFill("modify_time", FieldFill.UPDATE));
+        strategy.setTableFillList(tableFillList);
+
         mpg.setStrategy(strategy);//设置策略
         mpg.setTemplateEngine(new FreemarkerTemplateEngine());// 设置模板引擎
         mpg.execute();//执行

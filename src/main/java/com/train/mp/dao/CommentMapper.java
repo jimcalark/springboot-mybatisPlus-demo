@@ -1,7 +1,9 @@
-package com.train.mp.mapper;
+package com.train.mp.dao;
 
 import com.train.mp.entity.Comment;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Repository;
 
 /**
  * <p>
@@ -9,8 +11,10 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * </p>
  *
  * @author Jim clark
- * @since 2019-09-02
+ * @since 2019-09-03
  */
+@Mapper
+@Repository
 public interface CommentMapper extends BaseMapper<Comment> {
 
 }

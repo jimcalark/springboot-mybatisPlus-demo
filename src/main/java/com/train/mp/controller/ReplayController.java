@@ -8,14 +8,14 @@ import com.train.mp.controller.BaseController;
 
 /**
  * <p>
- * 论坛模块--帖子评论表 前端控制器
+ * 论坛模块--帖子评论回复表 前端控制器
  * </p>
  *
  * @author Jim clark
  * @since 2019-09-03
  */
 @RestController
-@RequestMapping("/comment")
-public class CommentController extends BaseController {
+@RequestMapping("/replay")
+public class ReplayController extends BaseController {
 
 }

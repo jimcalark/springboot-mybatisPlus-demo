@@ -1,7 +1,7 @@
 package com.train.mp.service.impl;
 
 import com.train.mp.entity.Comment;
-import com.train.mp.mapper.CommentMapper;
+import com.train.mp.dao.CommentMapper;
 import com.train.mp.service.ICommentService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
  * </p>
  *
  * @author Jim clark
- * @since 2019-09-02
+ * @since 2019-09-03
  */
 @Service
 public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> implements ICommentService {

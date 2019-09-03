@@ -50,6 +50,13 @@
             <version>3.2.0</version>
         </dependency>
 
+        <!--mysql 性能分析第三方插件 配合 mybatis plus 使用-->
+        <dependency>
+            <groupId>p6spy</groupId>
+            <artifactId>p6spy</artifactId>
+            <version>3.2.0</version>
+        </dependency>
+
         <!-- freemarker-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -68,6 +75,13 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
+        </dependency>
+
+        <!--fastJson-->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.59</version>
         </dependency>
 
         <!--test-->

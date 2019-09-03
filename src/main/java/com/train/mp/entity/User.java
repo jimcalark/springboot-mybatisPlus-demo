@@ -1,21 +1,23 @@
 package com.train.mp.entity;
 
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.extension.activerecord.Model;
-import com.baomidou.mybatisplus.annotation.TableId;
-import java.time.LocalDateTime;
+import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
-import java.io.Serializable;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.extension.activerecord.Model;
+import com.train.mp.enums.GenderEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
+import java.time.LocalDateTime;
+
 /**
  * <p>
- * 论坛模块--帖子评论表
+ *
  * </p>
  *
  * @author Jim clark
@@ -24,8 +26,8 @@ import lombok.experimental.Accessors;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("mp_comment")
-public class Comment extends Model<Comment> {
+@TableName("mp_user")
+public class User extends Model<User> {
 
     private static final long serialVersionUID = 1L;
 
@@ -33,17 +35,23 @@ public class Comment extends Model<Comment> {
     private Long id;
 
     /**
-     * 对应的帖子id
+     * 姓名
      */
-    private Long articleId;
+    private String name;
 
     /**
-     * 评论内容
+     * 性别 1:男性；2：女性
      */
-    private String content;
+    @EnumValue
+    private GenderEnum gender;
 
     /**
-     * 评论者id
+     * 手机号
+     */
+    private String phone;
+
+    /**
+     * 创建者id
      */
     @TableField(fill = FieldFill.INSERT)
     private Long creatorId;
@@ -51,7 +59,7 @@ public class Comment extends Model<Comment> {
     /**
      * 创建时间
      */
-    @TableField(fill = FieldFill.INSERT)
+    @TableField(value = "create_time",fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
     /**
@@ -67,15 +75,12 @@ public class Comment extends Model<Comment> {
     private LocalDateTime modifyTime;
 
     /**
-     * 逻辑删除： 0：删除；1：可用
+     * 1:可用;0:删除
      */
     @TableLogic
+    @TableField(value = "enable", select = false)
     private Integer enable;
 
 
-    @Override
-    protected Serializable pkVal() {
-        return this.id;
-    }
 
 }

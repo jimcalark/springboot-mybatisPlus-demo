@@ -15,7 +15,7 @@ import lombok.experimental.Accessors;
 
 /**
  * <p>
- * 论坛模块--帖子评论表
+ * 论坛模块---帖子表
  * </p>
  *
  * @author Jim clark
@@ -24,8 +24,8 @@ import lombok.experimental.Accessors;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("mp_comment")
-public class Comment extends Model<Comment> {
+@TableName("mp_article")
+public class Article extends Model<Article> {
 
     private static final long serialVersionUID = 1L;
 
@@ -33,17 +33,27 @@ public class Comment extends Model<Comment> {
     private Long id;
 
     /**
-     * 对应的帖子id
+     * 所属模块id
      */
-    private Long articleId;
+    private Long moduleId;
 
     /**
-     * 评论内容
+     * 标题
+     */
+    private String title;
+
+    /**
+     * 内容
      */
     private String content;
 
     /**
-     * 评论者id
+     * 浏览次数
+     */
+    private Integer visits;
+
+    /**
+     * 创建人id
      */
     @TableField(fill = FieldFill.INSERT)
     private Long creatorId;
@@ -67,7 +77,12 @@ public class Comment extends Model<Comment> {
     private LocalDateTime modifyTime;
 
     /**
-     * 逻辑删除： 0：删除；1：可用
+     * 是否可见：0：不可见；1：可见
+     */
+    private Integer state;
+
+    /**
+     * 逻辑删除 0:删除；1：可用
      */
     @TableLogic
     private Integer enable;
