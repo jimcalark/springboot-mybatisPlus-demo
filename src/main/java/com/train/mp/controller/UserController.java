@@ -136,7 +136,7 @@ public class UserController extends BaseController {
 
 
     /**
-     * 不建实体修改某些字段  [LambdaUpdateWrapper]
+     * 不建实体修改某些字段  [LambdaUpdateWrapper  LambdaUpdateWrapper]
      * <p>
      * 中文编码问题  吴娇凤转码为 URL 编码表内容
      * url编码规则：url编码就是一个字符ascii码的十六进制。不过稍微有些变动，需要在前面加上“%”。比如“\”，它的ascii码是92，92的十六进制是5c，所以“\”的url编码就是%5c
@@ -175,11 +175,5 @@ public class UserController extends BaseController {
         return ApiResult.successResult(userVoIPage);
     }
 
-    public static void main(String[] args) {
-        Map<String, Object> result = new HashMap<>();
-        result.put("1", "a");
-        result.put("2", "b");
-        System.err.println(result.values());
-    }
 
 }
