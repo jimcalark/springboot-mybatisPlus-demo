@@ -13,7 +13,7 @@ import java.io.StringWriter;
  * 异常拦截处理
  * 将自定义异常发送至MQ消费至数据库
  *
- * @author zhang kui
+ * @author Jim Clark
  */
 @ControllerAdvice
 public class InterceptCustomException {

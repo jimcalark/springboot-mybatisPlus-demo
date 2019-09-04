@@ -100,7 +100,7 @@ b、freemarker:
         <dependency>
           <groupId>p6spy</groupId>
           <artifactId>p6spy</artifactId>
-          <version>最新版本</version>
+          <version>3.8.0</version>
         </dependency>
 
     2、修改application.properties中mysql连接配置
@@ -135,3 +135,12 @@ b、freemarker:
             outagedetection=true
             # 慢SQL记录标准 2 秒
             outagedetectioninterval=2
+
+四、单表自定义返回对象的分页查询
+    
+        userController的pageUserList方法
+        
+        
+五、未写实践的
+    
+        apply函数  nested函数  condition、  last、 allEq 、 inSql           

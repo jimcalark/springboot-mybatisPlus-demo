@@ -4,7 +4,9 @@ package com.train.mp.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.train.mp.entity.User;
 import com.train.mp.enums.GenderEnum;
 import com.train.mp.service.IUserService;
@@ -12,6 +14,7 @@ import com.train.mp.support.ApiResult;
 import com.train.mp.support.ValidateParam;
 import com.train.mp.vo.UserVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,7 +29,7 @@ import java.util.Map;
 
 /**
  * <p>
- * 用户
+ * 用户  [单表操作]
  * </p>
  *
  * @author Jim clark
@@ -40,7 +43,7 @@ public class UserController extends BaseController {
     private IUserService userService;
 
     /**
-     * 新增或修改用户  [领域模型和字段填充]
+     * 新增或修改用户  [领域模型和字段填充 为null 的字段不会加入sql]
      * 传回id即为修改
      *
      * @param userVo        vo
@@ -134,11 +137,12 @@ public class UserController extends BaseController {
 
     /**
      * 不建实体修改某些字段  [LambdaUpdateWrapper]
-     *
+     * <p>
      * 中文编码问题  吴娇凤转码为 URL 编码表内容
      * url编码规则：url编码就是一个字符ascii码的十六进制。不过稍微有些变动，需要在前面加上“%”。比如“\”，它的ascii码是92，92的十六进制是5c，所以“\”的url编码就是%5c
      * http://127.0.0.1:8081/user/updateFiledList?userId=1&name=吴娇凤&phone=152816151231 转码为
      * http://127.0.0.1:8081/user/updateFiledList?userId=1&name=%E5%90%B4%E5%A8%87%E5%87%A4&phone=152816151231
+     *
      * @param userId 用户id
      * @param name   姓名
      * @param phone  电话
@@ -149,6 +153,26 @@ public class UserController extends BaseController {
         LambdaUpdateWrapper<User> updateWrapper = new LambdaUpdateWrapper<User>().eq(User::getId, userId).set(User::getName, name).set(User::getPhone, phone);
         userService.update(updateWrapper);
         return ApiResult.success();
+    }
+
+
+    /**
+     * 单表分页   [返回的自定义对象  注意 IPage<UserVo>  和mapper xml 中的sql]  这种属于自定义sql的查询不会自动过滤掉逻辑删除字段需要手动指出
+     *
+     * @param page     当前页
+     * @param pageSize 页容量
+     * @param name     姓名
+     * @param phone    电话
+     * @return
+     */
+    @GetMapping("page")
+    public ApiResult pageUserList(@RequestParam(required = false, defaultValue = "1") int page,
+                                  @RequestParam(required = false, defaultValue = "10") int pageSize,
+                                  @RequestParam(required = false) String name, @RequestParam(required = false) String phone) {
+        IPage<UserVo> pageParam = new Page<>(page, pageSize);
+        LambdaQueryWrapper<User> userLambdaQueryWrapper = new LambdaQueryWrapper<User>().likeRight(StringUtils.hasText(name), User::getName, name).likeRight(StringUtils.hasText(phone), User::getPhone, phone);
+        IPage<UserVo> userVoIPage = userService.userVoPage(pageParam, userLambdaQueryWrapper);
+        return ApiResult.successResult(userVoIPage);
     }
 
     public static void main(String[] args) {

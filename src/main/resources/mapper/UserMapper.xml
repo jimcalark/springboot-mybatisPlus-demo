@@ -15,4 +15,8 @@
         <result column="enable" property="enable" />
     </resultMap>
 
+    <select id="userVoPage" resultType="com.train.mp.vo.UserVo">
+          SELECT * FROM  mp_user ${ew.customSqlSegment}
+    </select>
 </mapper>
+

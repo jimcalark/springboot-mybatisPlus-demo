@@ -19,9 +19,6 @@
     </properties>
 
     <dependencies>
-
-
-
         <!--spring boot web  启动器-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -50,11 +47,11 @@
             <version>3.2.0</version>
         </dependency>
 
-        <!--mysql 性能分析第三方插件 配合 mybatis plus 使用-->
+        <!--mysql  性能分析第三方插件p6spy配合 mybatis plus 使用-->
         <dependency>
             <groupId>p6spy</groupId>
             <artifactId>p6spy</artifactId>
-            <version>3.2.0</version>
+            <version>3.8.0</version>
         </dependency>
 
         <!-- freemarker-->
