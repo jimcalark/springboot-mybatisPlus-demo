@@ -141,6 +141,26 @@ b、freemarker:
         userController的pageUserList方法
         
         
-五、未写实践的
+五、常用函数
     
-        apply函数  nested函数  condition、  last、 allEq 、 inSql           
+    1、apply函数拼接sql
+    
+    2、nested函数嵌套查询条件 如 （age=1 or email is not  null）
+    
+    3、condition 判定字段是否加入sql语句
+    
+    4、last  无视优化规则直接拼接到 sql的最后 只能调用一次,多次调用以最后一次为准 有sql注入的风险,请谨慎使用
+    
+    5、allEq 忽略所有不满足规则的字段 做相等比较  解析出的sql SELECT create_time FROM mp_user WHERE enable=1 AND (name = '吴')
+
+    6、inSql notInSql
+       inSql("age", "1,2,3,4,5,6")--->age in (1,2,3,4,5,6)
+       inSql("id", "select id from table where id < 3")--->id in (select id from table where id < 3)
+       notInSql("age", "1,2,3,4,5,6")--->age not in (1,2,3,4,5,6)
+   
+六、注意点
+    
+    1、xxxService.getMap() 其底层源码是当查询出多个结果集时只会去第一个 
+    2、selectMaps 要用到mapper
+    3、selectObjs 要用到mapper
+                   

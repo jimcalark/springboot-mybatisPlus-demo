@@ -25,4 +25,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public IPage<UserVo> userVoPage(IPage<UserVo> page, Wrapper<User> wrapper) {
         return baseMapper.userVoPage(page, wrapper);
     }
+
+
 }

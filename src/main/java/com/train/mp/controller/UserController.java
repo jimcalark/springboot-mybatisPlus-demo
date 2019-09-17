@@ -24,7 +24,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * <p>
@@ -175,4 +177,68 @@ public class UserController extends BaseController {
     }
 
 
+    /**
+     * apply函数拼接sql
+     * getMap在有多个结果集的时候只会取下标为0的那个
+     *
+     * @return
+     */
+    @GetMapping("apply")
+    public ApiResult applyFunction() {
+        LambdaQueryWrapper<User> query = new LambdaQueryWrapper<User>().select(User::getName)
+                .apply("date_format(create_time,'%Y-%m')between {0} and {1}", "2019-08", "2019-10");
+        return ApiResult.successResult(userService.getMap(query));
+    }
+
+    /**
+     * nested函数嵌套
+     *
+     * @return
+     */
+    @GetMapping("nested")
+    public ApiResult nestedFunction() {
+        LambdaQueryWrapper<User> query = new LambdaQueryWrapper<User>()
+                .select(User::getName)
+                .nested(q -> q.eq(User::getGender, GenderEnum.WOMEN.name()).or().isNotNull(User::getModifyTime));
+        return ApiResult.successResult(userService.getMap(query));
+    }
+
+    /**
+     * condition 判定字段是否加入sql语句
+     * <p>
+     * 传入的name和phone 为空时不会加入sql语句
+     *
+     * @param name  姓名
+     * @param phone 电话
+     * @return
+     */
+    @GetMapping("condition")
+    public ApiResult conditionFunction(@RequestParam(required = false) String name, @RequestParam(required = false) String phone) {
+        LambdaQueryWrapper<User> query = new LambdaQueryWrapper<User>()
+                .select(User::getName)
+                .likeRight(StringUtils.hasText(name), User::getName, name)
+                .eq(Objects.nonNull(phone), User::getPhone, phone);
+        return ApiResult.successResult(userService.getMap(query));
+    }
+
+
+    /**
+     * allEq 忽略所有不满足规则的字段 做相等比较
+     *解析出的sql SELECT create_time FROM mp_user WHERE enable=1 AND (name = '吴')
+     * @param name  姓名
+     * @param phone 电话
+     * @return
+     */
+    @GetMapping("allEq")
+    public ApiResult allEqFunction(@RequestParam(required = false) String name, @RequestParam(required = false) String phone) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", name);
+        map.put("phone", phone);
+        QueryWrapper<User> query = new QueryWrapper<User>().select("create_time");
+        query.allEq(map, false);//默认为true,true且字段为null时 sql 为 xxx is null;false时为null则忽略字段
+        return ApiResult.successResult(userService.getMap(query));
+    }
+
 }
+
+
