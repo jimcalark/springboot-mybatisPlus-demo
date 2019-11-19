@@ -81,6 +81,4 @@ public class User extends Model<User> {
     @TableField(value = "enable", select = false)
     private Integer enable;
 
-
-
 }

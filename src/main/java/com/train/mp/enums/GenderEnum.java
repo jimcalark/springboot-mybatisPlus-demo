@@ -31,4 +31,11 @@ public enum GenderEnum {
     public String getDesc() {
         return desc;
     }
+
+    public static Integer getValueByType(String name) {
+        for (GenderEnum gender : GenderEnum.values()) {
+            if (name.equals(gender.name())) return gender.getValue();
+        }
+        return 1;
+    }
 }

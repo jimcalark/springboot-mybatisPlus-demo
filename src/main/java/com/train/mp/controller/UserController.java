@@ -11,8 +11,16 @@ import com.train.mp.entity.User;
 import com.train.mp.enums.GenderEnum;
 import com.train.mp.service.IUserService;
 import com.train.mp.support.ApiResult;
+import com.train.mp.support.QqwException;
 import com.train.mp.support.ValidateParam;
+import com.train.mp.util.ExcelUtil;
 import com.train.mp.vo.UserVo;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
@@ -22,11 +30,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * <p>
@@ -224,7 +239,8 @@ public class UserController extends BaseController {
 
     /**
      * allEq 忽略所有不满足规则的字段 做相等比较
-     *解析出的sql SELECT create_time FROM mp_user WHERE enable=1 AND (name = '吴')
+     * 解析出的sql SELECT create_time FROM mp_user WHERE enable=1 AND (name = '吴')
+     *
      * @param name  姓名
      * @param phone 电话
      * @return
@@ -237,6 +253,43 @@ public class UserController extends BaseController {
         QueryWrapper<User> query = new QueryWrapper<User>().select("create_time");
         query.allEq(map, false);//默认为true,true且字段为null时 sql 为 xxx is null;false时为null则忽略字段
         return ApiResult.successResult(userService.getMap(query));
+    }
+
+
+    /**
+     * 导出excel
+     *
+     * @param response response
+     */
+    @GetMapping("exportExcel")
+    public ApiResult exportExcel(HttpServletResponse response) {
+        List<User> list = userService.list();
+        List<String> heads = Stream.of("姓名", "性别", "电话").collect(Collectors.toList());
+        List<String> columnNames = Stream.of("Name", "Gender", "Phone").collect(Collectors.toList());
+        ExcelUtil.exportExcelOneSheet(response, "用户名单", "用户名单", "用户名单", heads, list, columnNames);
+        return ApiResult.success();
+    }
+
+    /**
+     * 导入Excel
+     *
+     * @param file    文件
+     * @param request 请求
+     * @throws QqwException
+     */
+    @PostMapping("importExcel")
+    public ApiResult importExcel(@RequestParam("file") MultipartFile file, HttpServletRequest request) throws Exception {
+        if (Objects.isNull(file)) return ApiResult.errorResult("请导入文件");
+        String originalFilename = file.getOriginalFilename();
+        if (StringUtils.isEmpty(originalFilename)) return ApiResult.errorResult("文件名称不能为空");
+        int pointIndex = originalFilename.lastIndexOf(".");
+        String suffix = originalFilename.substring(pointIndex);
+        if (!".xls".equalsIgnoreCase(suffix) && !".xlsx".equals(suffix)) return ApiResult.errorResult("文件格式错误");
+        Workbook workbook = ".xls".equalsIgnoreCase(suffix) ? new HSSFWorkbook(file.getInputStream()) : new XSSFWorkbook(file.getInputStream());
+        Map<String, Object> map = new HashMap<>();
+        List<String> names = Stream.of("name","phone").collect(Collectors.toList());
+        ExcelUtil.getExcelList(map, User.class, workbook, 0, names, 2);
+        return ApiResult.success();
     }
 
 }
