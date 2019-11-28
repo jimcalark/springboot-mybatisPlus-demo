@@ -1,6 +1,8 @@
 package com.train.mp.controller;
 
 
+import com.train.mp.support.ApiResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
@@ -18,4 +20,10 @@ import com.train.mp.controller.BaseController;
 @RequestMapping("/article")
 public class ArticleController extends BaseController {
 
+
+
+    @GetMapping("test")
+    public ApiResult aopTest(){
+        return  ApiResult.successResult("测试AOP");
+    }
 }

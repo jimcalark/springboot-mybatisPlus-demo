@@ -2,9 +2,16 @@ package com.train.mp.controller;
 
 
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import org.springframework.web.bind.annotation.RestController;
-import com.train.mp.controller.BaseController;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Set;
+import java.util.Vector;
 
 /**
  * <p>
@@ -17,5 +24,11 @@ import com.train.mp.controller.BaseController;
 @RestController
 @RequestMapping("/comment")
 public class CommentController extends BaseController {
+
+
+    public static void main(String[] args) {
+        LinkedHashSet<Integer> list = new LinkedHashSet<>();
+        list.add(1);
+    }
 
 }
